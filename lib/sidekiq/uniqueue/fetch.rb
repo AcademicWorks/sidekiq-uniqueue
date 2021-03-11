@@ -14,7 +14,7 @@ module Sidekiq
       def retrieve_work
         Sidekiq.redis do |conn|
           queues_cmd.each do |queue|
-            Sidekiq::Uniqueue.confirm_unique_queue_validity(conn, queue)
+            # Sidekiq::Uniqueue.confirm_unique_queue_validity(conn, queue)   don't want to check if the queues are empty
             message = conn.evalsha pop_unique_eval_sha(conn), [queue]
             return UnitOfWork.new(queue, message) if message
           end
